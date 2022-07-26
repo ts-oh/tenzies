@@ -1,11 +1,76 @@
-:root {
-  font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
-  font-size: 16px;
-  line-height: 24px;
-  font-weight: 400;
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-text-size-adjust: 100%;
+* {
+	box-sizing: border-box;
+	font-family: Inter;
+}
+
+body {
+	margin: 0;
+	background-color: #0b2434;
+}
+
+h1 {
+	font-size: 48px;
+	color: whitesmoke;
+}
+
+.app-container {
+	height: 100vh;
+	margin-top: 10vh;
+	padding: 20px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+main {
+	background-color: rgb(235, 235, 235);
+	height: 250px;
+	max-width: 800px;
+	border-radius: 5px;
+	padding: 20px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+.dice-container {
+	display: grid;
+	grid-template: auto auto / repeat(5, 1fr);
+	gap: 20px;
+}
+
+.die-display {
+	margin: 0;
+	height: 50px;
+	width: 50px;
+	box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.15);
+	border-radius: 10px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	cursor: pointer;
+	font-size: 2rem;
+	background-color: whitesmoke;
+}
+
+.roll-dice {
+	height: 50px;
+	width: 100px;
+	border: none;
+	border-radius: 6px;
+	background-color: #5035ff;
+	color: white;
+	font-size: 1.2rem;
+	font-family: 'Karla', sans-serif;
+	cursor: pointer;
+	margin-top: 1rem;
+}
+
+.roll-dice:focus {
+	outline: none;
+}
+
+.roll-dice:active {
+	box-shadow: inset 5px 5px 10px -3px rgba(0, 0, 0, 0.7);
 }
