@@ -1,7 +1,18 @@
 import React from 'react'
+import { useState, useEffect } from 'react'
+import { useStopwatch } from 'react-timer-hook'
 
-export default function Timer(props) {
-	const { countTime } = props
+export default function Timer() {
+	const { seconds, minutes, isRunning, start, pause, reset } = useStopwatch({
+		autoStart: true,
+	})
 
-	return <h4>Timer: {countTime}</h4>
+	let min = minutes
+	let sec = seconds
+
+	return (
+		<h3>
+			{min} : {sec}
+		</h3>
+	)
 }

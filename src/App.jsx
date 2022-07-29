@@ -12,10 +12,9 @@ import Dice from './components/Dice'
 
 function App() {
 	const [parent] = useAutoAnimate()
-	const [dice, setDice] = React.useState(diceOnLoad())
-	const [tenzies, setTenzies] = React.useState(false)
-	const [rollCount, setrollCount] = React.useState(0)
-	const [timer, setTimer] = React.useState(0)
+	const [dice, setDice] = useState(diceOnLoad())
+	const [tenzies, setTenzies] = useState(false)
+	const [rollCount, setrollCount] = useState(0)
 
 	// Side effect for checking winning conidtion and keeping state synced
 	useEffect(() => {
@@ -106,16 +105,6 @@ function App() {
 		return setrollCount(0)
 	}
 
-	// Count up timer in seconds
-	function countTime() {
-		if (tenzies) {
-			return
-		} else {
-			let counter = setTimer((prevTime) => (prevTime += 1))
-			setInterval(counter, 1000)
-		}
-	}
-
 	// Method to map die element to the container
 	const diceElement = dice.map((die) => (
 		<Dice
@@ -127,6 +116,13 @@ function App() {
 		/>
 	))
 
+	function checkTimer() {
+		if (!tenzies) {
+			return <Timer />
+		} else {
+			return
+		}
+	}
 	// JSX to render DOM
 	return (
 		<div className='app-container'>
@@ -137,7 +133,7 @@ function App() {
 			</main>
 			<div className='utilities'>
 				<Counter counter={rollCount} />
-				<Timer countTime={timer} />
+				{checkTimer()}
 				<RollButton tenzies={tenzies} rollDice={rollDice} />
 			</div>
 		</div>
