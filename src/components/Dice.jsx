@@ -5,7 +5,9 @@ export default function Dice(props) {
 	}
 
 	function diceValue() {
-		if (value === 1) {
+		if (value === 0) {
+			return '🙈'
+		} else if (value === 1) {
 			return '⚀'
 		} else if (value === 2) {
 			return '⚁'
@@ -21,10 +23,8 @@ export default function Dice(props) {
 	}
 
 	return (
-		<div>
-			<h2 className={className} style={heldStyles} onClick={hold}>
-				{diceValue()}
-			</h2>
-		</div>
+		<h2 className={className} style={heldStyles} onClick={hold}>
+			{diceValue()}
+		</h2>
 	)
 }

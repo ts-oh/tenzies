@@ -3,17 +3,21 @@ import { useState, useEffect } from 'react'
 import { nanoid } from 'nanoid'
 import Confetti from 'react-confetti'
 import { useAutoAnimate } from '@formkit/auto-animate/react'
+import Counter from './components/Counter'
+import RollButton from './components/Button'
+import Timer from './components/Timer'
 
 import './index.css'
 import Dice from './components/Dice'
 
 function App() {
 	const [parent] = useAutoAnimate()
-	const [dice, setDice] = React.useState(allNewDice())
+	const [dice, setDice] = React.useState(diceOnLoad())
 	const [tenzies, setTenzies] = React.useState(false)
 	const [rollCount, setrollCount] = React.useState(0)
+	const [timer, setTimer] = React.useState(0)
 
-	// Side effect for checking winning conidtion and to keep state synced
+	// Side effect for checking winning conidtion and keeping state synced
 	useEffect(() => {
 		const allHeld = dice.every((die) => die.isHeld)
 		const firstValue = dice[0].value
@@ -33,7 +37,25 @@ function App() {
 		}
 	}
 
-	// Create an array of die object for the initial "dice" state
+	// Create zero value die object for diceOnLoad function
+	function zeroValueDieObject() {
+		return {
+			id: nanoid(),
+			value: 0,
+			isHeld: false,
+		}
+	}
+
+	// Create initial array of die objects before game starts
+	function diceOnLoad() {
+		let arrDice = []
+		for (let i = 0; i < 10; i++) {
+			arrDice.push(zeroValueDieObject())
+		}
+		return arrDice
+	}
+
+	// Create an array of die object when the game starts
 	function allNewDice() {
 		let arrDice = []
 		for (let i = 0; i < 10; i++) {
@@ -84,6 +106,16 @@ function App() {
 		return setrollCount(0)
 	}
 
+	// Count up timer in seconds
+	function countTime() {
+		if (tenzies) {
+			return
+		} else {
+			let counter = setTimer((prevTime) => (prevTime += 1))
+			setInterval(counter, 1000)
+		}
+	}
+
 	// Method to map die element to the container
 	const diceElement = dice.map((die) => (
 		<Dice
@@ -100,14 +132,13 @@ function App() {
 		<div className='app-container'>
 			{tenzies && <Confetti />}
 			<h1>Tenzies 🎲</h1>
-			<main ref={parent} className='dice-container'>
+			<main className='dice-container' ref={parent}>
 				{diceElement}
 			</main>
 			<div className='utilities'>
-				<h3>Roll Count: {rollCount}</h3>
-				<button className='roll-dice' onClick={rollDice}>
-					{tenzies === true ? 'New Game' : 'Roll'}
-				</button>
+				<Counter counter={rollCount} />
+				<Timer countTime={timer} />
+				<RollButton tenzies={tenzies} rollDice={rollDice} />
 			</div>
 		</div>
 	)

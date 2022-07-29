@@ -53,7 +53,7 @@ main {
 	align-items: center;
 	cursor: pointer;
 	background-color: whitesmoke;
-	font-size: 5rem;
+	font-size: 4rem;
 }
 
 .utilities {
@@ -67,7 +67,7 @@ main {
 
 .roll-dice {
 	height: 50px;
-	width: 100px;
+	width: 125px;
 	border: none;
 	border-radius: 6px;
 	background-color: #5035ff;
@@ -87,5 +87,11 @@ main {
 
 h3 {
 	margin: 0;
-	font-size: 1.5rem;
+	font-size: 1.25rem;
+}
+
+h4 {
+	margin: 0;
+	padding: 0 8px 0 8px;
+	font-size: 1.25rem;
 }
