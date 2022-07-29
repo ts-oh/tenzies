@@ -1,48 +1,66 @@
-import React from 'react';
-import { useState, useEffect } from 'react';
-import { nanoid } from 'nanoid';
+import React from 'react'
+import { useState, useEffect } from 'react'
+import { nanoid } from 'nanoid'
+import Confetti from 'react-confetti'
+import { useAutoAnimate } from '@formkit/auto-animate/react'
 
-import './index.css';
-import Dice from './components/Dice';
+import './index.css'
+import Dice from './components/Dice'
 
 function App() {
-	const [dice, setDice] = React.useState(allNewDice());
-	const [tenzies, setTenzies] = React.useState(false);
+	const [parent] = useAutoAnimate()
+	const [dice, setDice] = React.useState(allNewDice())
+	const [tenzies, setTenzies] = React.useState(false)
+	const [rollCount, setrollCount] = React.useState(0)
 
+	// Side effect for checking winning conidtion and to keep state synced
 	useEffect(() => {
-		const allHeld = dice.every((die) => die.isHeld);
-		const firstValue = dice[0].value;
-		const allSameValue = dice.every((die) => die.value === firstValue);
+		const allHeld = dice.every((die) => die.isHeld)
+		const firstValue = dice[0].value
+		const allSameValue = dice.every((die) => die.value === firstValue)
 		if (allHeld && allSameValue) {
-			console.log('you won!');
-			setTenzies(true);
+			console.log('you won!')
+			setTenzies(true)
 		}
-	}, [dice]);
+	}, [dice])
 
+	// Create a dice object to be used for initial state and dice re-roll
 	function generateDieObject() {
 		return {
 			id: nanoid(),
 			value: Math.ceil(Math.random() * 6),
 			isHeld: false,
-		};
-	}
-
-	function allNewDice() {
-		let arrDice = [];
-		for (let i = 0; i < 10; i++) {
-			arrDice.push(generateDieObject());
 		}
-		return arrDice;
 	}
 
+	// Create an array of die object for the initial "dice" state
+	function allNewDice() {
+		let arrDice = []
+		for (let i = 0; i < 10; i++) {
+			arrDice.push(generateDieObject())
+		}
+		return arrDice
+	}
+
+	// Dice roll function, checks for held die and also tracks state
 	function rollDice() {
-		setDice((prevDice) =>
-			prevDice.map((die) => {
-				return die.isHeld === true ? die : generateDieObject();
-			})
-		);
+		// if tenzies state(win condition) is false roll dice
+		if (!tenzies) {
+			setDice((prevDice) =>
+				prevDice.map((die) => {
+					return die.isHeld === true ? die : generateDieObject()
+				})
+			)
+			trackRollCount()
+		} else {
+			// if tenzies state(win condition) is true set tenzies to false and create all new dice roll state
+			setTenzies(false)
+			setDice(allNewDice())
+			resetRollCount()
+		}
 	}
 
+	// Function to hold die and track state
 	function holdDice(id) {
 		setDice((prevDice) =>
 			prevDice.map((die) => {
@@ -51,11 +69,22 @@ function App() {
 							...die,
 							isHeld: !die.isHeld,
 					  }
-					: die;
+					: die
 			})
-		);
+		)
 	}
 
+	// Function to track state(count) of dice roll
+	function trackRollCount() {
+		return setrollCount((prevRollCount) => (prevRollCount += 1))
+	}
+
+	// Resets the state(count) od dice roll
+	function resetRollCount() {
+		return setrollCount(0)
+	}
+
+	// Method to map die element to the container
 	const diceElement = dice.map((die) => (
 		<Dice
 			key={die.id}
@@ -64,17 +93,24 @@ function App() {
 			isHeld={die.isHeld}
 			hold={() => holdDice(die.id)}
 		/>
-	));
+	))
 
+	// JSX to render DOM
 	return (
 		<div className='app-container'>
-			<h1>Tenzies</h1>
-			<main className='dice-container'>{diceElement}</main>
-			<button className='roll-dice' onClick={rollDice}>
-				Roll
-			</button>
+			{tenzies && <Confetti />}
+			<h1>Tenzies 🎲</h1>
+			<main ref={parent} className='dice-container'>
+				{diceElement}
+			</main>
+			<div className='utilities'>
+				<h3>Roll Count: {rollCount}</h3>
+				<button className='roll-dice' onClick={rollDice}>
+					{tenzies === true ? 'New Game' : 'Roll'}
+				</button>
+			</div>
 		</div>
-	);
+	)
 }
 
-export default App;
+export default App
