@@ -6,16 +6,14 @@ import { useAutoAnimate } from '@formkit/auto-animate/react'
 import Counter from './components/Counter'
 import RollButton from './components/Button'
 import Timer from './components/Timer'
-
-import './index.css'
 import Dice from './components/Dice'
+import './index.css'
 
 function App() {
 	const [parent] = useAutoAnimate()
 	const [dice, setDice] = useState(diceOnLoad())
 	const [tenzies, setTenzies] = useState(false)
 	const [rollCount, setrollCount] = useState(0)
-
 	// Side effect for checking winning conidtion and keeping state synced
 	useEffect(() => {
 		const allHeld = dice.every((die) => die.isHeld)
@@ -116,13 +114,6 @@ function App() {
 		/>
 	))
 
-	function checkTimer() {
-		if (!tenzies) {
-			return <Timer />
-		} else {
-			return
-		}
-	}
 	// JSX to render DOM
 	return (
 		<div className='app-container'>
@@ -133,7 +124,7 @@ function App() {
 			</main>
 			<div className='utilities'>
 				<Counter counter={rollCount} />
-				{checkTimer()}
+				<Timer tenzies={tenzies} />
 				<RollButton tenzies={tenzies} rollDice={rollDice} />
 			</div>
 		</div>
