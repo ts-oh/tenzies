@@ -13,12 +13,12 @@ function App() {
 	const [parent] = useAutoAnimate()
 	const [dice, setDice] = useState(diceOnLoad())
 	const [tenzies, setTenzies] = useState(false)
-	const [rollCount, setrollCount] = useState(0)
+	const [rollCount, setrollCount] = useState(null)
 
-	const [seconds, setSeconds] = useState(0)
+	const [seconds, setSeconds] = useState(null)
 	const [timer, setTimer] = useState(false)
 	const [bestTime, setBestTime] = useState(
-		() => JSON.parse(localStorage.getItem('bestTime')) || 0
+		() => JSON.parse(localStorage.getItem('bestTime')) || null
 	)
 
 	useEffect(() => {
@@ -40,7 +40,6 @@ function App() {
 		const allSameValue = dice.every((die) => die.value === firstValue)
 		if (allHeld && allSameValue) {
 			setTenzies(true)
-			console.log('you won!')
 		}
 	}, [dice])
 
@@ -105,8 +104,8 @@ function App() {
 			trackRollCount()
 		} else {
 			setTenzies(false)
-			setSeconds(0)
-			setDice(allNewDice())
+			setSeconds(null)
+			setDice(diceOnLoad())
 			resetRollCount()
 		}
 	}
@@ -132,9 +131,9 @@ function App() {
 		return setrollCount((prevRollCount) => (prevRollCount += 1))
 	}
 
-	// Resets the state(count) od dice roll
+	// Resets the state(count) of dice roll
 	function resetRollCount() {
-		return setrollCount(0)
+		return setrollCount(null)
 	}
 
 	// Method to map die element to the container

@@ -5,7 +5,7 @@ export default function RollButton(props) {
 
 	return (
 		<button className='roll-dice' onClick={() => rollDice()}>
-			{tenzies === true ? 'New Game' : 'Roll'}
+			{tenzies === true ? 'New Game' : 'Roll!'}
 		</button>
 	)
 }

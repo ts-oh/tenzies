@@ -8,7 +8,7 @@ export default function Dice(props) {
 
 	function diceValue() {
 		if (value === 0) {
-			return '🙈'
+			return '💚'
 		} else if (value === 1) {
 			return '⚀'
 		} else if (value === 2) {

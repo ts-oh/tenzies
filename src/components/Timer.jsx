@@ -6,11 +6,17 @@ export default function Timer(props) {
 	return (
 		<div className='timer-container'>
 			<p>
-				<span>Timer: {seconds}</span>
+				<span>
+					Timer: {Math.floor(seconds / 60)}:
+					{Math.round(((seconds / 60) % 1) * 60)}
+				</span>
 			</p>
 			<hr />
 			<p>
-				<span>Best Time: {bestTime}</span>
+				<span>
+					Best Time: {Math.floor(bestTime / 60)}:
+					{Math.round(((bestTime / 60) % 1) * 60)}
+				</span>
 			</p>
 		</div>
 	)
