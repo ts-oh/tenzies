@@ -14,16 +14,48 @@ function App() {
 	const [dice, setDice] = useState(diceOnLoad())
 	const [tenzies, setTenzies] = useState(false)
 	const [rollCount, setrollCount] = useState(0)
+
+	const [seconds, setSeconds] = useState(0)
+	const [timer, setTimer] = useState(false)
+	const [bestTime, setBestTime] = useState(
+		() => JSON.parse(localStorage.getItem('bestTime')) || 0
+	)
+
+	useEffect(() => {
+		let interval = null
+		if (timer) {
+			interval = setInterval(() => {
+				setSeconds((prevTime) => prevTime + 1)
+			}, 1000)
+		} else if (!timer) {
+			clearInterval(interval)
+		}
+		return () => clearInterval(interval)
+	}, [timer])
+
 	// Side effect for checking winning conidtion and keeping state synced
 	useEffect(() => {
 		const allHeld = dice.every((die) => die.isHeld)
 		const firstValue = dice[0].value
 		const allSameValue = dice.every((die) => die.value === firstValue)
 		if (allHeld && allSameValue) {
-			console.log('you won!')
 			setTenzies(true)
+			console.log('you won!')
 		}
 	}, [dice])
+
+	useEffect(() => {
+		if (tenzies) {
+			setTimer(false)
+			if (!bestTime) {
+				setBestTime(seconds)
+				JSON.stringify(localStorage.setItem('bestTime', seconds))
+			} else if (bestTime && seconds < bestTime) {
+				setBestTime(seconds)
+				JSON.stringify(localStorage.setItem('bestTime', seconds))
+			}
+		}
+	}, [tenzies])
 
 	// Create a dice object to be used for initial state and dice re-roll
 	function generateDieObject() {
@@ -63,8 +95,8 @@ function App() {
 
 	// Dice roll function, checks for held die and also tracks state
 	function rollDice() {
-		// if tenzies state(win condition) is false roll dice
 		if (!tenzies) {
+			setTimer(true)
 			setDice((prevDice) =>
 				prevDice.map((die) => {
 					return die.isHeld === true ? die : generateDieObject()
@@ -72,8 +104,8 @@ function App() {
 			)
 			trackRollCount()
 		} else {
-			// if tenzies state(win condition) is true set tenzies to false and create all new dice roll state
 			setTenzies(false)
+			setSeconds(0)
 			setDice(allNewDice())
 			resetRollCount()
 		}
@@ -81,16 +113,18 @@ function App() {
 
 	// Function to hold die and track state
 	function holdDice(id) {
-		setDice((prevDice) =>
-			prevDice.map((die) => {
-				return die.id === id
-					? {
-							...die,
-							isHeld: !die.isHeld,
-					  }
-					: die
-			})
-		)
+		if (!tenzies) {
+			setDice((prevDice) =>
+				prevDice.map((die) => {
+					return die.id === id
+						? {
+								...die,
+								isHeld: !die.isHeld,
+						  }
+						: die
+				})
+			)
+		}
 	}
 
 	// Function to track state(count) of dice roll
@@ -124,7 +158,7 @@ function App() {
 			</main>
 			<div className='utilities'>
 				<Counter counter={rollCount} />
-				<Timer tenzies={tenzies} />
+				<Timer seconds={seconds} bestTime={bestTime} />
 				<RollButton tenzies={tenzies} rollDice={rollDice} />
 			</div>
 		</div>
